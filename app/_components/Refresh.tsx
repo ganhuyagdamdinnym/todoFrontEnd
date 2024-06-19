@@ -57,7 +57,7 @@ export function Refresh(props: TodoType) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to refresh "{title}" from trash
+            Are you sure you want to refresh`{title}` from trash
           </AlertDialogTitle>
           <AlertDialogDescription>
             {/* This action cannot be undone. This will permanently delete your

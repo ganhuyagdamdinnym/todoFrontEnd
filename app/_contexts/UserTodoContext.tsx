@@ -16,14 +16,7 @@ import { useGetTodoFromUserQuery } from "../generated";
 import { ApolloQueryResult } from "@apollo/client";
 import { Token } from "graphql";
 import { todo } from "node:test";
-// const { data, loading, error } = useGetTodoQueryQuery();
-// if (loading) {
-//   return <div>This is loading</div>;
-// }
 
-// if (!loading) {
-//   return <div style={{ color: "white", fontSize: "40px" }}>hi</div>;
-// }
 type Props = {
   children: ReactNode;
 };
@@ -44,7 +37,7 @@ export const useUserTodo = () => {
 const UserTodoProvider = (props: Props) => {
   const [userTodos, setUserTodos] = useState<TodoType[]>([]);
   const [deleteTodo, setDeleteTodo] = useState<TodoType[]>([]);
-  const token = localStorage.getItem("token");
+  const token = localStorage?.getItem("token");
   //console.log("token", token);
   const { data, loading, error, refetch } = useGetTodoFromUserQuery({
     variables: {

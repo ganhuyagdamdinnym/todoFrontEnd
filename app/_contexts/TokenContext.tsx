@@ -1,29 +1,41 @@
 "use client";
+
 import { useState, createContext, useContext, useEffect } from "react";
 import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-type contextType = {
+
+type ContextType = {
   token: string;
-  setToken: (token: any) => void;
+  setToken: (token: string) => void;
 };
+
 type Props = {
   children: ReactNode;
 };
-const TokenContext = createContext({} as contextType);
-export const useToken = () => {
-  return useContext(TokenContext);
+
+const TokenContext = createContext<ContextType | undefined>(undefined);
+
+export const useToken = (): ContextType => {
+  const context = useContext(TokenContext);
+  if (!context) {
+    throw new Error("useToken must be used within a TokenProvider");
+  }
+  return context;
 };
-const tokenContext = (props: Props) => {
+
+const TokenProvider = ({ children }: Props) => {
   const router = useRouter();
+  const [token, setToken] = useState<string>("");
+
   const checkToken = () => {
-    // window /main tai tentskue
-    const LocalToken = localStorage.getItem("token");
-    if (!LocalToken) {
+    const localToken = localStorage.getItem("token");
+    if (!localToken) {
       router.push("/login");
+    } else {
+      setToken(localToken);
     }
   };
-  const { children } = props;
-  const [token, setToken] = useState<string>("");
+
   useEffect(() => {
     checkToken();
   }, []);
@@ -33,4 +45,5 @@ const tokenContext = (props: Props) => {
     </TokenContext.Provider>
   );
 };
-export default tokenContext;
+
+export default TokenProvider;

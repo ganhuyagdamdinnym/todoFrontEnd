@@ -45,12 +45,12 @@ const TodoProvider = (props: Props) => {
   const fetch = () => {
     refetch();
   };
-  useEffect(() => {
-    fetch();
-    if (data && data.todoQuery) {
-      setTodos(data.todoQuery as TodoType[]);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   fetch();
+  //   if (data && data.todoQuery) {
+  //     setTodos(data.todoQuery as TodoType[]);
+  //   }
+  // }, [data]);
 
   return (
     <todoContext.Provider value={{ todos, setTodos, loading, error, refetch }}>

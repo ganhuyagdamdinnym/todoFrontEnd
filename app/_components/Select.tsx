@@ -33,7 +33,11 @@ export function SelectDemo() {
             //   onClick={() => HandleTodoFilter(todo.title)}
             //   key={index}
             // >
-            <SelectItem onClick={() => console.log("hi")} value={todo.title}>
+            <SelectItem
+              key={index}
+              onClick={() => console.log("hi")}
+              value={todo.title}
+            >
               {todo.title}
             </SelectItem>
             //  </div>

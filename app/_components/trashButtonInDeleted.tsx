@@ -14,7 +14,7 @@ import Image from "next/image";
 import { useStatus } from "../_contexts/StatusContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { useDeletedTodo } from "../_contexts/DeletedTodoContext";
+// import { useDeletedTodo } from "../_contexts/DeletedTodoContext";
 import { useDeleteTodoFromTrashMutation } from "../generated";
 type TodoType = {
   title: string;
@@ -23,21 +23,21 @@ type TodoType = {
 };
 export function TrashButton(props: TodoType) {
   const { title, id } = props;
-  const { refetch } = useDeletedTodo();
+  // const { refetch } = useDeletedTodo();
   const [deleteTodo, { data }] = useDeleteTodoFromTrashMutation();
   const HandleMoveToTrash = async () => {
     const deleteTodoInput = {
       id: id,
     };
-    try {
-      await deleteTodo({ variables: { input: deleteTodoInput } }).then(
-        (res) => {
-          refetch();
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   await deleteTodo({ variables: { input: deleteTodoInput } }).then(
+    //     (res) => {
+    //       // refetch();
+    //     }
+    //   );
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (
@@ -50,7 +50,7 @@ export function TrashButton(props: TodoType) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete "{title}" from trash?
+            Are you sure you want to delete {title} from trash?
           </AlertDialogTitle>
           <AlertDialogDescription>
             {/* This action cannot be undone. This will permanently delete your

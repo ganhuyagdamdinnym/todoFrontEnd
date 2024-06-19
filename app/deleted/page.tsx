@@ -86,8 +86,10 @@ export default function Deleted() {
                         value={selectTeam}
                         className="border-[1px] px-2 py-1 rounded-xl w-[100px]"
                       >
-                        {TeamArray.map((e) => (
-                          <option value={e}>{e}</option>
+                        {TeamArray.map((e, index) => (
+                          <option key={index} value={e}>
+                            {e}
+                          </option>
                         ))}
                       </select>
                     ) : (
