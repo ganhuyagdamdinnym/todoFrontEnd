@@ -1,0 +1,14 @@
+mutation SignUpUser($input: inputSignUp) {
+  signUpUser(input: $input) {
+    email
+    name
+    password
+    todos {
+      _id
+      title
+      status
+      team
+      date
+    }
+  }
+}
