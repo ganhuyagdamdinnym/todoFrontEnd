@@ -38,7 +38,8 @@ const TokenProvider = ({ children }: Props) => {
 
   useEffect(() => {
     checkToken();
-  }, []);
+  }, [router]);
+
   return (
     <TokenContext.Provider value={{ token, setToken }}>
       {children}

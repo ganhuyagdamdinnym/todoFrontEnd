@@ -1,7 +1,6 @@
 "use client";
 
-import { UserType } from "@/lib/todoTypes";
-import { TodoType } from "@/lib/todoTypes";
+import { UserType, TodoType } from "@/lib/todoTypes";
 import axios from "axios";
 import React, {
   ReactNode,
@@ -11,64 +10,71 @@ import React, {
   useState,
 } from "react";
 import { Back_End_url } from "../utils/Back_url";
-import { useGetTodoQueryQuery } from "../generated";
 import { useGetTodoFromUserQuery } from "../generated";
 import { ApolloQueryResult } from "@apollo/client";
-import { Token } from "graphql";
-import { todo } from "node:test";
 
 type Props = {
   children: ReactNode;
 };
-type contextType = {
-  userTodos: TodoType[];
-  setUserTodos: (todos: any) => void;
-  name: String;
 
-  //   loading: boolean;
-  //   error: any;
+type ContextType = {
+  userTodos: TodoType[];
+  setUserTodos: (todos: TodoType[]) => void;
+  name: string;
   refetch: (variables?: Partial<any>) => Promise<ApolloQueryResult<any>>;
 };
-const userTodoContext = createContext({} as contextType);
-export const useUserTodo = () => {
-  return useContext(userTodoContext);
+
+const UserTodoContext = createContext<ContextType | undefined>(undefined);
+
+export const useUserTodo = (): ContextType => {
+  const context = useContext(UserTodoContext);
+  if (!context) {
+    throw new Error("useUserTodo must be used within a UserTodoProvider");
+  }
+  return context;
 };
-//wrap component gaduurn oroodog
-const UserTodoProvider = (props: Props) => {
+
+const UserTodoProvider = ({ children }: Props) => {
   const [userTodos, setUserTodos] = useState<TodoType[]>([]);
   const [deleteTodo, setDeleteTodo] = useState<TodoType[]>([]);
-  const token = localStorage?.getItem("token");
-  //console.log("token", token);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const localToken = localStorage.getItem("token");
+    setToken(localToken);
+  }, []);
+
   const { data, loading, error, refetch } = useGetTodoFromUserQuery({
     variables: {
       input: {
-        token: token,
+        token: token ?? "", // Ensure token is a string
       },
     },
+    skip: !token, // Skip the query if token is null
   });
-  console.log("queryDataUser", data?.getTodoFromUser?.[0]?.name);
-  const todos = data?.getTodoFromUser?.[0]?.todos;
-  console.log("sss", todos);
-  const name = data?.getTodoFromUser?.[0]?.name as String;
-  const { children } = props;
-  // if (todos) {
-  //   const deleted = todos?.filter((e) => {
-  //     e?.status == false;
-  //   });
-  // }
-  // console.log("ddd", deleted);
+
   useEffect(() => {
     if (data && data.getTodoFromUser) {
-      setUserTodos(data.getTodoFromUser?.[0]?.todos as TodoType[]);
+      setUserTodos(data.getTodoFromUser[0]?.todos as TodoType[]);
     }
   }, [data]);
 
+  useEffect(() => {
+    if (userTodos) {
+      const deleted = userTodos.filter((e) => e?.status === false);
+      setDeleteTodo(deleted);
+    }
+  }, [userTodos]);
+
+  const name = data?.getTodoFromUser?.[0]?.name || "";
+
   return (
-    <userTodoContext.Provider
+    <UserTodoContext.Provider
       value={{ userTodos, name, setUserTodos, refetch }}
     >
       {children}
-    </userTodoContext.Provider>
+    </UserTodoContext.Provider>
   );
 };
+
 export default UserTodoProvider;
